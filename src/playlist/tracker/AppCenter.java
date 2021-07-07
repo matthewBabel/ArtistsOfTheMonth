@@ -1,19 +1,25 @@
 package playlist.tracker;
 
+import playlist.tracker.artist.ArtistRecordHandler;
+import playlist.tracker.artist.ArtistRecordMaker;
 import playlist.tracker.screen.*;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontFormatException;
+import java.awt.GridBagConstraints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.Timer;
+import playlist.tracker.component.button.SmallButton;
+import playlist.tracker.font.FontHandler;
+import playlist.tracker.frame.AppFrame;
 
 /**
  * Tracks various music related things, including an artist of the month tracker
@@ -30,123 +36,148 @@ public final class AppCenter {     // TODO : key for point values,
     public static boolean monthAssigned = false;
     public static int startMonth = -1;
     public static String year = "";
-    public static final Color myGreenColor = new Color(165, 230, 162);
-    public static Font smallFont;
-    public static Font plainFont;
-    public static Font mediumBoldFont;
-    public static Font boldFont;
-    public static Font extraBigFont;
+    public static final Color MYGREEN = new Color(165, 230, 162);
     public static OpeningScreen openingScreen;
-    public static MonthlyScreen monthlyScreen;
+    public static MainMenuScreen menuScreen;
     public static AddScreen addScreen;
     public static ViewScreen viewScreen;
-    public static StatsScreen statsScreen;
+    public static AllTimeScreen allTimeScreen;
     public static GraphScreen graphScreen;
-    public static AdvancedStatsScreen advancedStatsScreen;
+    public static StatsScreen statsScreen;
     public static TopPerPlaceScreen topPerPlaceScreen;
     public static MiscStatsScreen miscStatsScreen;
     public static TopPerYearScreen topPerYearScreen;
     public static OrderStatsScreen orderStatsScreen;
+    public static BiographyScreen biographyScreen;
     private static JPanel viewer;
     public static FileData artistsOfTheMonth;
-    public static final List<Artist> ARTISTS = new ArrayList<>();
+    public static ArtistRecordHandler artistHandler;
+    public static ArtistRecordMaker recordMaker;
+    public static AppFrame frame;
 
-    public static final String BASEDIR = configureBaseDir(); 
+    public static final String BASEDIR = configureBaseDir();
+
+    private static String shownScreenStr;
+
+    public static int fontCharWidth = 0;
+
+    public enum Screen {
+        OPENING("Opening Screen", openingScreen),
+        MAINMENU("Monthly Screen", menuScreen),
+        VIEW("View Screen", viewScreen),
+        ADD("Add Screen", addScreen),
+        ALLTIME("All Time Screen", allTimeScreen),
+        STATS("Stats Screen", statsScreen),
+        GRAPH("Graph Screen", graphScreen),
+        PERPLACE("Top Per Place Screen", topPerPlaceScreen),
+        PERYEAR("Top Per Year Screen", topPerYearScreen),
+        MISC("Misc Screen", miscStatsScreen),
+        INORDER("Order Stats Screen", orderStatsScreen),
+        BIOGRAPHY("Biography Screen", biographyScreen);
+
+        public final String label;
+        public UpdatingScreen screen;
+
+        private Screen(String label, UpdatingScreen screen) {
+            this.label = label;
+            this.screen = screen;
+        }
+    }
+
+
+
+
 
     //setting up screens of view
     public AppCenter() {
-
-        
-        JFrame frame = new JFrame("Artists of the Month");
-        frame.setTitle("Music Database");
-        frame.setLocation(100, 20);
-        frame.setSize(1200, 1000);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-
-        smallFont = makeFont(BASEDIR + "/resources/fonts/PT_Sans-Web-Regular.ttf", Font.BOLD, 15);
-        plainFont = makeFont(BASEDIR + "/resources/fonts/PT_Sans-Web-Regular.ttf", Font.PLAIN, 20);
-        mediumBoldFont = makeFont(BASEDIR + "/resources/fonts/PT_Sans-Web-Bold.ttf", Font.BOLD, 22);
-        boldFont = makeFont(BASEDIR + "/resources/fonts/PT_Sans-Web-Bold.ttf", Font.BOLD, 30);
-        extraBigFont = makeFont(BASEDIR + "/resources/fonts/New Athletic M54.ttf", Font.PLAIN, 47);
-
-        openingScreen = new OpeningScreen();
-        monthlyScreen = new MonthlyScreen();
-        viewScreen = new ViewScreen();
-        addScreen = new AddScreen();
-        statsScreen = new StatsScreen();
-        advancedStatsScreen = new AdvancedStatsScreen(); // this is going to hold 3-4 new screens
-        topPerPlaceScreen = new TopPerPlaceScreen();
-        miscStatsScreen = new MiscStatsScreen();
-        topPerYearScreen = new TopPerYearScreen();
-        orderStatsScreen = new OrderStatsScreen();
-        graphScreen = new GraphScreen();
-
-        viewer = new JPanel(new CardLayout()); // for switching screens
-        viewer.add(openingScreen, "Opening Screen");
-        viewer.add(monthlyScreen, "Monthly Screen");
-        viewer.add(viewScreen, "View Screen");
-        viewer.add(addScreen, "Add Screen");
-        viewer.add(statsScreen, "Stats Screen");
-        viewer.add(advancedStatsScreen, "Advanced Stats Screen");
-        viewer.add(graphScreen, "Graph Screen");
-        viewer.add(topPerPlaceScreen, "Top Per Place Screen");
-        viewer.add(miscStatsScreen, "Misc Screen");
-        viewer.add(topPerYearScreen, "Top Per Year Screen");
-        viewer.add(orderStatsScreen, "Order Stats Screen");
-        viewScreen("Opening Screen");
-
-        frame.add(viewer);
-        frame.setVisible(true);
-        
-        System.out.println(BASEDIR);
+        FontHandler.initFonts();
+      
     }
 
     // starting point, creates a FileData to hold and control data
     public static void main(String[] args) {
         artistsOfTheMonth = new FileData(BASEDIR + "/resources/data/monthlyArtists.txt");
-        FileData artistFolder = new FileData(BASEDIR + "/resources/data/artists");
-        for (int i = 0; i < artistFolder.size(); i++) {
-            ARTISTS.add(new Artist(artistFolder.get(i), false));
-        }
-
+        artistHandler = new ArtistRecordHandler();
+        recordMaker = new ArtistRecordMaker(); 
+        frame = new AppFrame();
+        
         AppCenter md = new AppCenter();
+
+        MainMenuScreen.tryGetMonth();
+        recordStats();
+        setUpScreens();
+
     }
 
-    /**
-     * Makes font with given fileAddress, style and size
-     *
-     * @param fileAddress
-     * @param style
-     * @param size
-     * @return the created font
-     */
-    public static Font makeFont(String fileAddress, int style, int size) {
-        
+    public static void recordStats() {
+        recordMaker.makeRecords();
+        artistHandler.sortAll();
+    }
 
-        
-        File fontFile = new File(fileAddress);
-        Font font;
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-            font = font.deriveFont(style, size);
-            return font;
-        } catch (FontFormatException | IOException e) {
-            System.err.println("Font is null  makeFont : StatsCenter");
-            return null;
-        }
+    private static void setUpScreens() {
+        openingScreen = new OpeningScreen();
+        menuScreen = new MainMenuScreen();
+        viewScreen = new ViewScreen();
+        addScreen = new AddScreen();
+        allTimeScreen = new AllTimeScreen();
+        statsScreen = new StatsScreen(); // this is going to hold 3-4 new screens
+        topPerPlaceScreen = new TopPerPlaceScreen();
+        miscStatsScreen = new MiscStatsScreen();
+        topPerYearScreen = new TopPerYearScreen();
+        orderStatsScreen = new OrderStatsScreen();
+        graphScreen = new GraphScreen();
+        biographyScreen = new BiographyScreen();
+
+        viewer = new JPanel(new CardLayout()); // for switching screens
+        viewer.add(openingScreen, Screen.OPENING.label);
+        viewer.add(menuScreen, Screen.MAINMENU.label);
+        viewer.add(viewScreen, Screen.VIEW.label);
+        viewer.add(addScreen, Screen.ADD.label);
+        viewer.add(allTimeScreen, Screen.ALLTIME.label);
+        viewer.add(statsScreen, Screen.STATS.label);
+        viewer.add(graphScreen, Screen.GRAPH.label);
+        viewer.add(topPerPlaceScreen, Screen.PERPLACE.label);
+        viewer.add(miscStatsScreen, Screen.MISC.label);
+        viewer.add(topPerYearScreen, Screen.PERYEAR.label);
+        viewer.add(orderStatsScreen, Screen.INORDER.label);
+        viewer.add(biographyScreen, Screen.BIOGRAPHY.label);
+        viewScreen(Screen.OPENING.label);
+
+        frame.add(viewer);
+        frame.setVisible(true);
     }
 
     /**
      * sets up the scrollPane for 2 jPanels
+     *
+     * @param portScreen
+     * @param viewScreen
      */
     public static void setUpScrollPane(JPanel portScreen, JPanel viewScreen) {
         portScreen.setLayout(new BorderLayout());
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.getViewport().add(viewScreen);
-        scrollPane.getViewport().setBackground(myGreenColor);
+        scrollPane.getViewport().setBackground(MYGREEN);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         portScreen.add(scrollPane, BorderLayout.CENTER);
+    }
+
+    public static void setUpBottomBackBtn(JPanel outerScreen, JPanel scrollPanel, SmallButton backBtn) {
+        outerScreen.removeAll();
+        GridBagConstraints con = new GridBagConstraints();
+        con.gridx = 0;
+        con.gridy = 0;
+        con.weightx = 1;
+        con.weighty = .99;
+        con.fill = GridBagConstraints.BOTH;
+        outerScreen.add(scrollPanel, con);
+
+        con.gridy = 1;
+        con.weighty = .01;
+        con.fill = GridBagConstraints.NONE;
+        con.anchor = GridBagConstraints.SOUTHEAST;
+        outerScreen.add(backBtn, con);
     }
 
     /**
@@ -156,7 +187,28 @@ public final class AppCenter {     // TODO : key for point values,
      */
     public static void viewScreen(String str) {
         CardLayout cardLayout = (CardLayout) viewer.getLayout();
+
+        shownScreenStr = str;
+        UpdatingScreen screen = getUpdatingScreen(str);
+        screen.update();
+        screen.update();
+
         cardLayout.show(viewer, str);
+    }
+
+    private static UpdatingScreen getUpdatingScreen(String str) {
+        for (Screen s : Screen.values()) {
+            if (s.label.equals(str)) {
+                return s.screen;
+            }
+        }
+
+        return null;
+    }
+
+    public static void updateShownScreen() {
+        UpdatingScreen screen = getUpdatingScreen(shownScreenStr);
+        screen.update();
     }
 
     public static String getPlaceAsString(int num) {
@@ -182,6 +234,10 @@ public final class AppCenter {     // TODO : key for point values,
     }
 
     public static String readableMonthsString(int months) {
+        if (months == 0) {
+            return "0";
+        }
+
         if (months < 12) {
             return (months == 1) ? months + " month" : months + " months";
         }
@@ -201,10 +257,31 @@ public final class AppCenter {     // TODO : key for point values,
 
         return (brightness < 128);
     }
-    
+
     public static String configureBaseDir() {
         String dir = new File("").getAbsolutePath();
-                
+
         return dir;
+    }
+
+    // timeIndex 0 starts at first month
+    public static String getReadableTime(int monthTimeIndex) {
+        int intYear = Integer.valueOf(year);
+        int monthNum = startMonth;
+
+        if (monthTimeIndex > (11 - monthNum)) {
+            monthTimeIndex -= (12 - monthNum);
+            intYear++;
+        } else {
+            return MONTHS[monthNum + monthTimeIndex] + " " + intYear;
+        }
+
+        while (monthTimeIndex >= 12) {
+            monthTimeIndex -= 12;
+            intYear++;
+        }
+
+        monthNum = monthTimeIndex;
+        return MONTHS[monthNum] + " " + intYear;
     }
 }

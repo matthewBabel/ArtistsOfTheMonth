@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package playlist.tracker.screen;
 
 import java.awt.Dimension;
@@ -10,64 +5,64 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import static playlist.tracker.AppCenter.ARTISTS;
+import playlist.tracker.AppCenter;
 import static playlist.tracker.AppCenter.MONTHS;
 import static playlist.tracker.AppCenter.artistsOfTheMonth;
-import static playlist.tracker.AppCenter.boldFont;
-import static playlist.tracker.AppCenter.getPlaceAsString;
-import static playlist.tracker.AppCenter.mediumBoldFont;
-import static playlist.tracker.AppCenter.myGreenColor;
-import static playlist.tracker.AppCenter.plainFont;
+import static playlist.tracker.font.FontHandler.*;
 import static playlist.tracker.AppCenter.setUpScrollPane;
 import static playlist.tracker.AppCenter.startMonth;
 import static playlist.tracker.AppCenter.viewScreen;
 import static playlist.tracker.AppCenter.year;
-import playlist.tracker.Artist;
+import playlist.tracker.artist.Artist;
+import static playlist.tracker.AppCenter.MYGREEN;
+import playlist.tracker.component.button.SmallButton;
+import playlist.tracker.component.label.ExtraLargeLabel;
+import playlist.tracker.component.label.LargeSkinnyLabel;
+import playlist.tracker.component.label.MediumLabel;
 
 /**
  *
  * @author Matt
  */
-public class OrderStatsScreen extends JPanel {
+public class OrderStatsScreen extends UpdatingScreen {
 
-    private JPanel viewPort;
-
+    private JPanel innerScrollScreen = new JPanel();
+    private final JPanel scrollContainer = new JPanel();
+    
     public OrderStatsScreen() {
-        viewPort = new JPanel();
-        setUpScrollPane(this, viewPort);
+        setUpScrollPane(scrollContainer, innerScrollScreen);
         initScreen();
     }
 
-    private void initScreen() {
-        viewPort.removeAll();
-        viewPort.setLayout(new GridBagLayout());
-        viewPort.setBackground(myGreenColor);
+    @Override
+    protected void initScreen() {
+        removeAll();
+        setLayout(new GridBagLayout());
+        setBackground(MYGREEN);
+        
+        innerScrollScreen.removeAll();
+        innerScrollScreen.setLayout(new GridBagLayout());
+        innerScrollScreen.setBackground(MYGREEN);
 
-        JButton backBtn = new JButton("Back");
+        SmallButton backBtn = new SmallButton("Back");
         backBtn.setPreferredSize(new Dimension(120, 70));
         backBtn.setFont(plainFont);
         backBtn.addActionListener((java.awt.event.ActionEvent e) -> {
-            viewScreen("Advanced Stats Screen");
+            viewScreen("Stats Screen");
         });
+        components.add(backBtn);
 
-        JLabel titleLbl = new JLabel();
-        titleLbl.setPreferredSize(new Dimension(300, 30));
-        titleLbl.setFont(boldFont);
-        titleLbl.setText("In Order Stats");
+        ExtraLargeLabel titleLbl = new ExtraLargeLabel("In Order Stats", true);
+        components.add(titleLbl);
 
-        JLabel statTracker = new JLabel();
-        statTracker.setPreferredSize(new Dimension(300, 24));
-        statTracker.setFont(mediumBoldFont);
-        statTracker.setText("Year - " + year);
+        MediumLabel statTracker = new MediumLabel("Year - " + year);
+        components.add(statTracker);
 
         GridBagConstraints titleCon = new GridBagConstraints();
         GridBagConstraints yearCon = new GridBagConstraints();
         GridBagConstraints monthCon = new GridBagConstraints();
         GridBagConstraints labelCon = new GridBagConstraints();
-        GridBagConstraints backCon = new GridBagConstraints();
 
         titleCon.gridx = 0;
         titleCon.gridy = 0;
@@ -75,7 +70,7 @@ public class OrderStatsScreen extends JPanel {
         titleCon.weightx = 1;
         titleCon.weighty = .1;
         titleCon.anchor = GridBagConstraints.NORTH;
-        viewPort.add(titleLbl, titleCon);
+        innerScrollScreen.add(titleLbl, titleCon);
 
         yearCon.gridx = 0;
         yearCon.gridy = 1;
@@ -83,7 +78,7 @@ public class OrderStatsScreen extends JPanel {
         yearCon.weighty = .05;
         yearCon.insets = new Insets(20, 30, 0, 0);
         yearCon.anchor = GridBagConstraints.WEST;
-        viewPort.add(statTracker, yearCon);
+        innerScrollScreen.add(statTracker, yearCon);
 
         monthCon.gridx = 0;
         monthCon.gridy = 2;
@@ -101,13 +96,8 @@ public class OrderStatsScreen extends JPanel {
 
         labelLoop(yearCon, monthCon, labelCon);
 
-        backCon.gridx = 1;
-        backCon.gridy = labelCon.gridy + 1;
-        backCon.weightx = .2;
-        backCon.weighty = .1;
-        backCon.insets = new Insets(0, 0, 10, 10);
-        backCon.anchor = GridBagConstraints.LAST_LINE_END;
-        viewPort.add(backBtn, backCon);
+        AppCenter.setUpBottomBackBtn(this, scrollContainer, backBtn);
+        revalidate();
     }
 
     private void labelLoop(GridBagConstraints yearCon, GridBagConstraints monthCon, GridBagConstraints labelCon) {
@@ -122,30 +112,26 @@ public class OrderStatsScreen extends JPanel {
             if (i == (artistsOfTheMonth.size() - 1)) {
                 break;
             }
-                      
+
             if (line.equals("space")) { // new month, check for new year
                 if (monthNum == 12) { // new year
                     monthNum = 0;
                     intYear++;
 
-                    JLabel yearLbl = new JLabel();
-                    yearLbl.setPreferredSize(new Dimension(300, 24));
-                    yearLbl.setFont(mediumBoldFont);
-                    yearLbl.setText("Year - " + intYear);
+                    MediumLabel yearLbl = new MediumLabel("Year - " + intYear);
+                    components.add(yearLbl);
 
                     yearCon.gridy = labelCon.gridy + 2;
                     labelCon.gridy += 2;
-                    viewPort.add(yearLbl, yearCon);
+                    innerScrollScreen.add(yearLbl, yearCon);
                 }
 
-                JLabel monthLbl = new JLabel();
-                monthLbl.setPreferredSize(new Dimension(300, 24));
-                monthLbl.setFont(plainFont);
-                monthLbl.setText(MONTHS[monthNum]+":");
+                LargeSkinnyLabel monthLbl = new LargeSkinnyLabel(MONTHS[monthNum] + ":");
+                components.add(monthLbl);
                 monthCon.gridy = labelCon.gridy + 1;
                 labelCon.gridy += 2;
-                viewPort.add(monthLbl, monthCon);
-                
+                innerScrollScreen.add(monthLbl, monthCon);
+
                 monthNum++;
 
             } else { // artist line
@@ -165,25 +151,20 @@ public class OrderStatsScreen extends JPanel {
                         artistsPlaced.add(foundName);
 
                         Artist foundArtist = null;
-                        for (Artist a : ARTISTS) {
+                        for (Artist a : AppCenter.artistHandler.getArtistsList()) {
                             if (a.getName().equals(foundName)) {
                                 foundArtist = a;
                                 break;
                             }
                         }
 
-                        JLabel lbl = new JLabel(foundArtist.getName() + " - " + foundArtist.getTotalScore());
-                        lbl.setSize(400, 5);
-                        lbl.setFont(plainFont);
+                        LargeSkinnyLabel lbl = new LargeSkinnyLabel(foundArtist.getName() + " - " + foundArtist.getTotalScore());
+                        components.add(lbl);
                         labelCon.gridy++;
-                        viewPort.add(lbl, labelCon);
+                        innerScrollScreen.add(lbl, labelCon);
                     }
                 }
             }
         }
-    }
-
-    public void update() {
-        initScreen();
     }
 }
