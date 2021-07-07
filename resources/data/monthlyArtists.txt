@@ -308,3 +308,199 @@ Lil Pump&NAV&Lil Skies&2 Chainz
 21 Savage&Gunna&Rich The Kid
 Offset
 space
+Juice WRLD
+Schoolboy Q
+Rich The Kid
+21 Savage
+Lil Pump
+Wiz Khalifa&Lil Skies
+Future&Offset&2 Chainz
+space
+Juice WRLD&Schoolboy Q
+21 Savage
+Wiz Khalifa&Rich The Kid&Logic
+Lil Pump&Lil Skies
+Future&Nav&Offset
+space
+Schoolboy Q
+21 Savage
+Juice WRLD&Tyga
+Gucci Mane&Nav&Rich The Kid&Logic
+Future&Lil Pump
+space
+Schoolboy Q
+21 Savage&Ed Sheeran
+Juice WRLD&Chance the Rapper
+NAV&Rich The Kid&Tyga&YBN Cordae
+Logic
+space
+Young Thug
+Schoolboy Q&Rich The Kid
+Tyga&Ed Sheeran
+Drake&Juice WRLD
+Future&21 Savage&Ski Mask The Slump God
+space
+Post Malone
+Young Thug
+DaBaby
+Jack Harlow
+Drake&Schoolboy q
+Rich The Kid&Ed Sheeran
+Future&Wiz Khalifa&Tyga&Ski Mask The Slump God
+space
+Post Malone
+Young Thug
+Gucci Mane&DaBaby
+Jack Harlow
+Drake&Fetty Wap
+Ski Mask The Slump God
+Lil Uzi Vert&Schoolboy Q&Juice WRLD&Ed Sheeran
+space
+Post Malone&Young Thug
+DaBaby&Milky Chance
+Jack Harlow
+Gucci Mane&Fetty Wap
+Lil Uzi Vert&Drake&Schoolboy Q&Juice WRLD&Ski Mask The Slump God
+space
+Young Thug
+Smokepurpp
+Post Malone&DaBaby&Milky Chance
+Gucci Mane&Jack Harlow
+Doja Cat
+Lil Uzi Vert&Juice WRLD&Fetty Wap&Ski Mask The Slump God
+space
+Smokepurpp
+Lil Wayne
+Milky Chance
+Young Thug
+DaBaby&Russ
+Jack Harlow&Doja Cat
+Gucci Mane&Eminem&Tame Impala
+space
+Smokepurpp&Tame Impala
+Milky Chance
+DaBaby
+Lil Wayne&Russ
+Young Thug&Jack Harlow&Ski Mask The Slump God
+Eminem
+space
+Lil Uzi Vert
+Smokepurpp
+Jack Harlow
+DaBaby&Russ&Tame Impala
+Lil Wayne&Eminem&Ski Mask The Slump God
+Young Thug&Rich The Kid&Milky Chance
+space
+Lil Uzi Vert
+Smokepurpp
+DaBaby
+Jack Harlow
+Tame Impala
+Lil Wayne&Eminem&Ski Mask The Slump God&Russ
+Young Thug&Milky Chance
+space
+Lil Uzi Vert
+Smokepurpp
+Future
+DaBaby
+Drake&NAV&Lil Wayne&Lil Yachty
+Gunna
+Young Thug&Eminem
+space
+Smokepurpp
+Lil Uzi Vert
+Future
+Lil Wayne
+Drake&DaBaby&NAV&Gunna
+Eminem&Lil Yachty
+space
+Smokepurpp
+Gorillaz
+Juice WRLD
+Future&Lil Uzi Vert
+Gunna
+Oliver Tree
+DaBaby&Rolling Blackouts Coastal Fever
+Drake&Lil Wayne&Eminem&Milky Chance&Tame Impala&Tyla Yaweh
+space
+Smokepurpp
+Juice WRLD
+Future&DaBaby
+Gorillaz
+Lil Uzi Vert
+Gunna
+Glass Animals
+Drake&Tame Impala&Oliver Tree&Dominic Fike
+space
+Smokepurpp
+Juice WRLD
+DaBaby&Gorillaz
+Glass Animals
+Lil Uzi Vert
+Gunna&Tame Impala
+Oliver Tree&Dominic Fike
+space
+Smokepurpp
+Gorillaz
+Ty Dolla $ign&Glass Animals
+Lil Uzi Vert&21 Savage
+Juice WRLD&DaBaby&Jack Harlow&Tame Impala&Oliver Tree&Comethazine
+space
+Lil Uzi Vert
+Future
+Smokepurpp
+Gorillaz
+DaBaby&Lil Yachty
+Ty Dolla $ign
+21 Savage&NAV&SAINt JHN
+space
+Lil Uzi Vert
+Future
+Kid Cudi
+Smokepurpp&Gorillaz&SAINt JHN
+Rico Nasty
+Hollywood Undead
+21 Savage&Eminem
+space
+Lil Uzi Vert
+Future&Kid Cudi
+SAINt JHN
+Smokepurpp
+Gorillaz&Lil Skies&Rico Nasty
+NAV&Comethazine&Hollywood Undead
+space
+Smokepurpp
+Kid Cudi
+Lil Uzi Vert
+Future
+SAINt JHN
+Lil Skies
+Gorillaz
+21 Savage&NAV&Rico Nasty&Comethazine&Chloe x Halle
+space
+Smokepurpp&Kid Cudi
+Lil Uzi Vert
+Future&Rico Nasty
+Lil Skies
+SAINt JHN&Comethazine
+21 Savage&Gorillaz&Chloe x Halle
+space
+Kid Cudi
+Smokepurpp
+Young Thug
+Rico Nasty&Chloe x Halle
+Lil Uzi Vert&Lil Skies&Gunna
+Future&21 Savage
+space
+Kid Cudi
+Smokepurpp&Chloe x Halle
+Lil Uzi Vert&Young Thug&Lil Skies&Rico Nasty&Oliver Tree
+Gunna&J. Cole
+space
+Kid Cudi
+Gucci Mane
+Smokepurpp
+Migos&Rico Nasty
+Young Thug&Kodak Black&Chloe x Halle
+Lil Uzi Vert&Gunna&Ski Mask The Slump God&Oliver Tree&J. Cole&Modest Mouse
+space
